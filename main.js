@@ -4,16 +4,37 @@ const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
 
-
+const errorModal = document.querySelector("#modal")
+errorModal.classList.add("hidden")
+const allLikes = document.querySelectorAll(".like-glyph")
+allLikes.forEach(like => {
+  like.addEventListener("click", function (e) {
+    mimicServerCall()
+      .then(data => {
+        if (e.target.innerHTML === FULL_HEART) {
+          e.target.innerHTML = EMPTY_HEART
+          e.target.classList.remove("activated-heart")
+        } else {
+          e.target.innerHTML = FULL_HEART
+          e.target.classList.add("activated-heart")
+        }
+      })
+      .catch(e => {
+        errorModal.classList.remove("hidden")
+        errorModal.textContent = e
+        setTimeout(() => errorModal.hidden = true, 3000)
+      })
+  });
+})
 
 
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
 //------------------------------------------------------------------------------
 
-function mimicServerCall(url="http://mimicServer.example.com", config={}) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
+function mimicServerCall(url = "http://mimicServer.example.com", config = {}) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
       let isRandomFailure = Math.random() < .2
       if (isRandomFailure) {
         reject("Random server error. Try again.");
